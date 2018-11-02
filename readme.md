@@ -1,13 +1,4 @@
-# Boilerplay
-
-Using the latest technology in the Scala ecosystem, Boilerplay is a pure Scala reactive web application built on Play 2.6, Scala.js, Silhouette 5, Akka, PostgreSQL 9.5+, and Sangria/GraphQL.
-It provides a good starting point for whatever you want to build.
-
-
-## Documentation
-
-https://kyleu.github.io/boilerplay
-
+Using the latest technology in the Scala ecosystem, this  is a pure Scala reactive web application built on Play 2.6, Scala.js, Silhouette 5, Akka, PostgreSQL 9.5+, and Sangria/GraphQL.
 
 ## Features
 
@@ -22,13 +13,7 @@ https://kyleu.github.io/boilerplay
 * Binary and JSON serialization, provided by circe and Boopickle.
 
 
-## Contributing
-
-The project is built on SBT, and can be opened by IntelliJ directly. Plugins are included for Eclipse and Sublime Text.
 
 
 ## License
 
-The code is licensed under [CC0-1.0](license). 
-
-You can basically do whatever you want with the code, no attribution required. Make it your own! 

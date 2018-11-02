@@ -1,0 +1,91 @@
+@(user: models.user.SystemUser, debug: Boolean = false)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData
+)@traceData.logViewClass(getClass)
+
+
+<html lang="en" class="full-height">
+<head>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <!--<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/material-dashboard.min.css")"/>-->
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/font-awesome/css/font-awesome.css")"/>
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/css/bootstrap.css")"/>
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/css/mdb.css")"/>
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/toastr/build/toastr.css")"/>
+  <!--controllers.routes.Assets.versioned("lib/materializecss/css/materialize.css").url,-->
+
+  <!-- Material Design for Bootstrap fonts and icons -->
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>-->
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">-->
+  <!--<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">-->
+  <style rel="stylesheet">
+        /* TEMPLATE STYLES */
+
+        main {
+            padding-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        .extra-margins {
+            margin-top: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .jumbotron {
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #1a237e ;
+        }
+
+        footer.page-footer {
+            background-color: #1a237e;
+            margin-top: 2rem;
+        }
+        .navbar .btn-group .dropdown-menu a:hover {
+            color: #000 !important;
+        }
+        .navbar .btn-group .dropdown-menu a:active {
+            color: #fff !important;
+        }
+    </style>
+
+</head>
+<body aria-busy="true" class="indigo lighten-5">
+
+
+<script src="@routes.Assets.versioned("lib/jquery/jquery.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/popper.min.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/bootstrap.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/mdb.js")"></script>
+<script src="@routes.Assets.versioned("lib/toastr/toastr.js")"></script>
+
+@views.html.components.includeScalaJs(debug)
+ <script> $(function() { new MainLayout(); }) </script>
+<script>
+        wow = new WOW().init();
+        toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+    </script>
+</body>
+</html>
+
+

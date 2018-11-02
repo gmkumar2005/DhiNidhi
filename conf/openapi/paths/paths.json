@@ -1,0 +1,17 @@
+{
+  "#include:common.json": "*",
+
+  // Start enum paths
+  "#include:settings/settingKey.json": "*",
+  // End enum paths
+
+  // Start schema paths
+  "#include:audit/audit.json": "*",
+  "#include:audit/auditRecord.json": "*",
+  "#include:ddl/flywaySchemaHistory.json": "*",
+  "#include:note/note.json": "*",
+  "#include:sync/syncProgress.json": "*",
+  "#include:task/scheduledTaskRun.json": "*",
+  "#include:user/systemUser.json": "*"
+  // End schema paths
+}

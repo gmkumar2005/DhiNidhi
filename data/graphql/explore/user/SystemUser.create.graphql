@@ -1,0 +1,18 @@
+# Creates a new SystemUser entity.
+mutation SystemUserCreate {
+  systemUser {
+    create(fields: [{k: "", v: ""}]) {
+      id
+      username
+      preferences {
+        theme
+      }
+      profile {
+        providerID
+        providerKey
+      }
+      role
+      created
+    }
+  }
+}

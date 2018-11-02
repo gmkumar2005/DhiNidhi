@@ -1,0 +1,259 @@
+@(user: models.user.SystemUser, debug: Boolean = false)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData
+)@traceData.logViewClass(getClass)
+
+
+<html lang="en" class="full-height">
+<head>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <!--<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/material-dashboard.min.css")"/>-->
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/font-awesome/css/font-awesome.css")"/>
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/css/bootstrap.css")"/>
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/css/mdb.css")"/>
+  <!--controllers.routes.Assets.versioned("lib/materializecss/css/materialize.css").url,-->
+
+  <!-- Material Design for Bootstrap fonts and icons -->
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>-->
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">-->
+  <!--<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">-->
+  <style rel="stylesheet">
+        /* TEMPLATE STYLES */
+
+        main {
+            padding-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        .extra-margins {
+            margin-top: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .jumbotron {
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #3b295a;
+        }
+
+        footer.page-footer {
+            background-color: #3b295a;
+            margin-top: 2rem;
+        }
+        .navbar .btn-group .dropdown-menu a:hover {
+            color: #000 !important;
+        }
+        .navbar .btn-group .dropdown-menu a:active {
+            color: #fff !important;
+        }
+    </style>
+
+</head>
+<body aria-busy="true">
+
+<!--Main Navigation-->
+
+
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <a class="navbar-brand" href="#"><strong><i class="fa fa-compass" aria-hidden="true"></i></strong></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+
+      <div class="md-form mt-0 col-md-10 mb-0 p-0">
+        <input type="text" id="form1" class="form-control form-control-sm text-warning mb-0">
+        <label for="form1">Search... (e.g. Status:open AND Comments:msg)</label>
+      </div>
+      <a class="navbar-brand" href="#"><strong><i class="fa fa-search" aria-hidden="true"></i></strong></a>
+    </div>
+  </nav>
+
+
+
+
+<!--Main Navigation-->
+
+
+<main class="mt-5">
+
+  <!--Main layout-->
+  <div class="container-fluid">
+    <!--First row-->
+    <div class="row wow fadeIn" data-wow-delay="0.2s">
+      <div class="col-md-12">
+        <div class="jumbotron p-2">
+          <!--Table-->
+          <div class='table-responsive'>
+          <table id="tablePreview" class="table  table-hover table-sm">
+            <!--Table head-->
+            <thead>
+            <tr>
+              <th class="text-warning">#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Visits</th>
+              <th>Age</th>
+              <th>Country</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Visits</th>
+              <th>Age</th>
+              <th>Country</th>
+            </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+            <tr>
+              <th scope="row" class="text-warning">1</th>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@@fat</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@@fat</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@@twitter</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@@fat</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+            </tr>
+
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+            </tr>
+
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@@mdo</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>Otto Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components  Register for free and get access to amazing framework and beautiful components </td>
+            </tr>
+
+
+            </tbody>
+            <!--Table body-->
+          </table>
+          <!--Table-->
+          </div>
+          </div>
+
+          <h2 class="h2-responsive">Material Design for Bootstrap</h2>
+          <br>
+          <p>Powerful and free Material Design UI KIT</p>
+          <hr>
+          <p>Register for free and get access to amazing framework and beautiful components</p>
+          <a target="_blank" href="https://mdbootstrap.com/getting-started/" class="btn btn-outline-unique" rel="nofollow">Download <i class="fa fa-download right"></i></a>
+          <a target="_blank" href="https://mdbootstrap.com/material-design-for-bootstrap/" class="btn btn-unique btn-ptc" rel="nofollow">Learn more <i class="fa fa-book right"></i></a>
+        </div>
+      </div>
+    </div>
+    <!--/.First row-->
+
+    <hr class="extra-margins">
+
+
+  <!--/.Main layout-->
+
+</main>
+
+
+<!--Main Layout-->
+
+
+
+
+<script src="@routes.Assets.versioned("lib/jquery/jquery.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/popper.min.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/bootstrap.js")"></script>
+<script src="@routes.Assets.versioned("lib/mdbootstrap-bootstrap-material-design/js/mdb.js")"></script>
+@views.html.components.includeScalaJs(debug)
+<!--<script> $(function() { new MainPage(); }) </script>-->
+<script>
+        wow = new WOW().init();
+    </script>
+</body>
+</html>
+
+

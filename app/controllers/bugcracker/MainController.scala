@@ -30,6 +30,7 @@ import BgbugReader._
 import cats.syntax.either._
 import cats.Show
 import scala.reflect.internal.util.Collections._
+
 @javax.inject.Singleton
 class MainController @javax.inject.Inject() (override val app: Application) extends BaseController("main") {
 
@@ -167,6 +168,14 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
 
         //                log.debug(s"Search request ${relatedEsNFRQuery.show}")
         println(client.show(relatedEsNFRQuery))
+
+        log.debug("relatedEsNFRQuery")
+
+        log.debug(client.show(relatedEsNFRQuery))
+        //        println(">>>>>>")
+        //        println(appendStatusQuery(fullDoc.`Summary` + fullDoc.`Description`))
+        //        println(">>>>>>")
+        //        println(removeStopWords(fullDoc.`Summary` + fullDoc.`Description`))
         EitherT(client.execute(relatedEsNFRQuery))
       }
     } yield r2
@@ -202,7 +211,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       "dont", "should", "shouldve", "now", "d", "ll", "m", "o", "re", "ve", "y", "ain", "aren", "arent", "couldn", "couldnt", "didn", "didnt", "doesn", "doesnt",
       "hadn", "hadnt", "hasn", "hasnt", "haven", "havent", "isn", "isnt", "ma", "mightn", "mightnt", "mustn", "mustnt", "needn", "neednt", "shan", "shant",
       "shouldn", "shouldnt", "wasn", "wasnt", "weren", "werent", "won", "wont", "wouldn", "wouldnt")
-    val trimmedSentance = sentence.trim.replaceAll(" +", " ").replaceAll("[^A-Za-z0-9\\s]", "").toLowerCase
+    val trimmedSentance = sentence.filter(_ >= ' ').trim.replaceAll(" +", " ").replaceAll("[^A-Za-z0-9\\s]", "").toLowerCase
     val wordList = trimmedSentance.split(" ")
     val cleanList = wordList.filter(!stopWords.contains(_))
     cleanList.mkString(" ")

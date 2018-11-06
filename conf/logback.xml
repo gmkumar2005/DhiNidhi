@@ -27,6 +27,7 @@
   <logger name="play" level="INFO" />
   <logger name="application" level="INFO" />
   <logger name="boilerplay" level="INFO" />
+  <logger name="controllers" level="DEBUG" />
 
   <logger name="com.mohiva" level="INFO" />
 

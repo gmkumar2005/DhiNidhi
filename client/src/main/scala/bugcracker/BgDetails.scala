@@ -13,8 +13,14 @@ import io.circe.syntax._
 import org.scalajs.jquery.JQueryStatic
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.util.{Failure, Success}
+
+@js.native
+@JSImport("jquery", JSImport.Namespace)
+object jquery extends JQueryStatic
+
 object BgDetails {
   val bgDoc = Var(Bgbug("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
     "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))

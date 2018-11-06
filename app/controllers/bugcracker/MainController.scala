@@ -43,7 +43,6 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
 
   def searchES = withSession("admin.index", admin = true) { implicit request => implicit td => {
     import BgbugReader.BgbugReader
-    //    val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
 
     val limit = 10
     val query = search("defects") query "test" limit {
@@ -56,7 +55,6 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
         Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug]).asJson)
       }
     }
-    //            Future.successful(Ok(foo.asJson))
     resp
 
   }
@@ -84,7 +82,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
     val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 15))
     val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
-    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start }
+    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start } sortByFieldDesc ("Defect ID")
 
     val resp = client.execute(query).map {
       case Left(s) => Ok(s.asJson)
@@ -93,7 +91,6 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
       }
     }
-    //    Future.successful(Ok(foo.asJson))
     resp
   }
   }
@@ -102,14 +99,6 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
     val limit = 10
     val query = search("defects") query "test" limit { limit }
-
-    //    val resp = client.execute(query).map {
-    //      case Left(s) => Ok(s.asJson)
-    //      case Right(i) => {
-    //        Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug].distinct.take(5)).asJson)
-    //      }
-    //    }
-    //    Future.successful(Ok(foo.asJson))
 
     // start of chaining
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
@@ -120,7 +109,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { limit }
+        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { limit } sortByFieldDesc ("Defect ID")
         EitherT(client.execute(releatedEsQuery))
       }
     } yield r2
@@ -164,7 +153,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
         val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Summary`) limit { limit }
-        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary` + fullDoc.`Description`) limit { limit }
+        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary` + fullDoc.`Description`) limit { limit } sortByFieldDesc ("Defect ID")
 
         //                log.debug(s"Search request ${relatedEsNFRQuery.show}")
         println(client.show(relatedEsNFRQuery))
@@ -232,7 +221,6 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
         Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug]).asJson)
       }
     }
-    //    Future.successful(Ok(foo.asJson))
     resp
   }
   }

@@ -83,12 +83,12 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
     val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 15))
     val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
-    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start } sortByFieldDesc ("Defect ID")
+    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start }
 
     val resp = client.execute(query).map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10).sortBy(_.`Defect ID`).reverse
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
       }
     }
@@ -107,7 +107,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { 15 } sortByFieldDesc ("Defect ID")
+        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { 15 }
         EitherT(client.execute(releatedEsQuery))
       }
     } yield r2
@@ -115,7 +115,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).drop(1).take(10)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).slice(1, 5).sortBy(_.`Defect ID`).reverse
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
       }
     }
@@ -138,7 +138,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary`) limit { 10 } sortByFieldDesc ("Defect ID")
+        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary`) limit { 10 }
         //        println(client.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
         log.debug(client.show(relatedEsNFRQuery))
@@ -149,7 +149,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(5)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(5).sortBy(_.`Defect ID`)
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
 
       }

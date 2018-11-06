@@ -196,7 +196,9 @@ object BgDetails {
       {
         Constants(relatedResults.bind.bgBugs: _*).map { item =>
           <p>
-            <a class="text-left" href={ "#/details?" + item.`_id` }>{ item.`Defect ID`.toString }</a>
+            <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
+              window.scroll(0, 0)
+            }>{ item.`Defect ID`.toString } </a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>

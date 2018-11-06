@@ -173,17 +173,23 @@ object BgDetails {
 
   }
 
-  @dom def statusIcon(status: String): Binding[BindingSeq[Node]] = {
-    status.toString match {
-      case "Closed NFR" => <i class="fa fa-bullseye mr-1 " data:aria-hidden="true"></i><strong>{ status }</strong>
-      case "Closed" => <i class="fa fa-check mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
-      case "Open" => <i class="fa fa-opera  mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
-      case "New" => <i class="fa fa-file-o  mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
-      case "Suspected NFR" => <i class="fa fa-minus-circle mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
-      case "Rejected" => <i class="fa fa-window-close-o  mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
-      case _ => <i class="fa fa-opera  mr-1" data:aria-hidden="true"></i><strong>{ status }</strong>
+  @dom def statusIcon(status: String): Binding[Node] = {
+    status match {
+      case "Closed NFR" => <i class="fa fa-bullseye mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case "Closed" => <i class="fa fa-check mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case "Open" => <i class="fa fa-opera  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case "New" => <i class="fa fa-file-o  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case "Suspected NFR" => <i class="fa fa-minus-circle mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case "Rejected" => <i class="fa fa-window-close-o  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
+      case _ => <i class="fa fa-opera  mr-1 font-italic text-muted small" data:aria-hidden="true">{ status }</i>
     }
   }
+  @dom def renderCustomerIcon(customer: String): Binding[Node] =
+    <i class="fa fa-university   mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ customer } </i>
+
+  @dom def renderBucket(bucket: String): Binding[Node] =
+    <i class="fa   fa-share-alt mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ bucket }</i>
+
   @dom def rightPanel: Binding[Node] = {
     <div class="d-flex p-2  text-wrap w-25 flex-column yellow lighten-5 border-left border-light sticky">
       <h2>Related</h2>
@@ -192,7 +198,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` }>{ item.`Defect ID`.toString }</a>
             { item.`Summary` }
-            &nbsp;{ statusIcon(item.`Status`).bind }
+            &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
         }
       }
@@ -204,7 +210,7 @@ object BgDetails {
               window.scroll(0, 0)
             }>{ item.`Defect ID`.toString }</a>
             { item.`Summary` }
-            &nbsp;{ statusIcon(item.`Status`).bind }
+            &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
         }
       }

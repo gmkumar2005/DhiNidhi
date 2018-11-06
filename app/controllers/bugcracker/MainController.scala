@@ -26,7 +26,8 @@ import com.sksamuel.elastic4s.searches.sort.SortOrder
 
 import scala.concurrent.Future
 //import BgbugReader._
-import BgbugReader._
+//import BgbugReader._
+//import BgbugReader.BgbugReader
 import cats.syntax.either._
 import cats.Show
 import scala.reflect.internal.util.Collections._
@@ -96,20 +97,17 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
   }
   def searchRelated = withSession("admin.index", admin = true) { implicit request => implicit td => {
     import BgbugReader.BgbugReader
-    val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
-    val limit = 10
-    val query = search("defects") query "test" limit { limit }
 
     // start of chaining
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
     val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 10))
-    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
+    // dont remove    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
 
     val relatedEsResults = for {
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { limit } sortByFieldDesc ("Defect ID")
+        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { 15 } sortByFieldDesc ("Defect ID")
         EitherT(client.execute(releatedEsQuery))
       }
     } yield r2
@@ -117,11 +115,10 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).drop(1).take(6)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).drop(1).take(10)
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
       }
     }
-    //  val r1:Future[Either[RequestFailure, RequestSuccess] = client.execute(query)
 
     // end of  chaining
 
@@ -131,40 +128,20 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
 
   def searchRelatedNFR = withSession("admin.index", admin = true) { implicit request => implicit td => {
     import BgbugReader.BgbugReader
-    val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
-    val limit = 10
-    val query = search("defects") query "test" limit { limit }
-
-    //    val resp = client.execute(query).map {
-    //      case Left(s) => Ok(s.asJson)
-    //      case Right(i) => {
-    //        Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug].distinct.take(5)).asJson)
-    //      }
-    //    }
-    //    Future.successful(Ok(foo.asJson))
 
     // start of chaining
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
     val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 10))
-    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
+    //    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
 
     val relatedEsResults = for {
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val releatedEsQuery = search("defects") query removeStopWords(fullDoc.`Summary`) limit { limit }
-        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary` + fullDoc.`Description`) limit { limit } sortByFieldDesc ("Defect ID")
-
-        //                log.debug(s"Search request ${relatedEsNFRQuery.show}")
-        println(client.show(relatedEsNFRQuery))
-
+        val relatedEsNFRQuery = search("defects") query appendStatusQuery(fullDoc.`Summary`) limit { 10 } sortByFieldDesc ("Defect ID")
+        //        println(client.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
-
         log.debug(client.show(relatedEsNFRQuery))
-        //        println(">>>>>>")
-        //        println(appendStatusQuery(fullDoc.`Summary` + fullDoc.`Description`))
-        //        println(">>>>>>")
-        //        println(removeStopWords(fullDoc.`Summary` + fullDoc.`Description`))
         EitherT(client.execute(relatedEsNFRQuery))
       }
     } yield r2
@@ -172,15 +149,12 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(5)
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
 
       }
     }
-    //  val r1:Future[Either[RequestFailure, RequestSuccess] = client.execute(query)
-
     // end of  chaining
-
     relatedSearchResults
   }
   }

@@ -128,3 +128,12 @@ def removeStopWords(sentence: String): String = {
 
 val cleanSentance = removeStopWords(resp.toString)
 //List("hello", "to", "yes") filter (!testWords.contains(_))
+
+val distinctQuery = search("defects") query "*" limit {2}
+val distinctUsers = client.execute(distinctQuery).map {
+  case Left(s) => s.asJson
+  case Right(i) => {
+    //        i.result.to[Bgbug]
+    i.result.hits.hits.head.sourceAsString
+  }
+}.await

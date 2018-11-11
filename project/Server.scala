@@ -34,7 +34,7 @@ object Server {
       GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, WebJars.swaggerUi,WebJars.mdbbootstrapMaterial,WebJars.popperjs,WebJars.toastr,
-      Utils.csv, Utils.scalaGuice, Utils.commonsIo, Utils.commonsLang, Utils.betterFiles, Utils.scopts, Utils.reftree,Utils.playcirce,
+      Utils.csv, Utils.scalaGuice, Utils.commonsIo, Utils.commonsLang, Utils.betterFiles,  Utils.reftree,Utils.playcirce,
       Elastic4s.elastic4score,Elastic4s.elastic4shttp,Elastic4s.elastic4sstream,Elastic4s.elastic4scirce,
       Akka.testkit, Play.test, Testing.scalaTest
     )

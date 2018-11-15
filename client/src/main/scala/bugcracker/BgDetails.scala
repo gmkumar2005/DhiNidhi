@@ -1,5 +1,6 @@
 package bugcracker
 
+import bugcracker.BgDetails.{searchRelated, searchRelatedNFR, selectedTab}
 import bugcracker.NavBarComponent.{NavbarMenuItem, route}
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var}
 import com.thoughtworks.binding.{Binding, FutureBinding, dom}
@@ -26,7 +27,7 @@ object BgDetails {
     "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
   val relatedResults = Var(SearchResult(0, Seq.empty))
   val relatedNfrResults = Var(SearchResult(0, Seq.empty))
-
+  val selectedTab = Var("Related")
   @dom def getSingleDoc(): Binding[Node] = {
     val navItem = NavBarComponent.route.state.bind.navBarName
     val navHash = NavBarComponent.route.state.bind.hash
@@ -46,7 +47,7 @@ object BgDetails {
     <div></div>
   }
 
-  @dom def searchRelated(): Binding[Node] = {
+  @dom def searchRelated: Binding[Node] = {
     val navItem = NavBarComponent.route.state.bind.navBarName
     val navHash = NavBarComponent.route.state.bind.hash
     val docId = navHash.substring(navHash.indexOf("""?""") + 1)
@@ -66,7 +67,76 @@ object BgDetails {
     <div></div>
   }
 
-  @dom def searchRelatedNFR(): Binding[Node] = {
+  @dom def searchRelatedU: Binding[Node] = {
+    val tab = selectedTab.bind
+    val navItem = NavBarComponent.route.state.bind.navBarName
+    val navHash = NavBarComponent.route.state.bind.hash
+    val docId = navHash.substring(navHash.indexOf("""?""") + 1)
+    val esQuery = ESQuery(docId, 0, 5)
+    if (tab == "Related" && navItem == "BGBug Details") {
+      FutureBinding(Ajax.post(
+        "bugcracker/searchRelated",
+        esQuery.asJson.toString(), 0
+      )).bind match {
+        case None =>
+        case Some(Success(response)) =>
+          val r1 = decode[SearchResult](response.responseText)
+          relatedResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
+        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+      }
+    } else {
+      relatedResults.value = SearchResult(0, Seq.empty)
+    }
+    <div></div>
+  }
+
+  @dom def searchRelatedClosedU: Binding[Node] = {
+    val tab = selectedTab.bind
+    val navItem = NavBarComponent.route.state.bind.navBarName
+    val navHash = NavBarComponent.route.state.bind.hash
+    val docId = navHash.substring(navHash.indexOf("""?""") + 1)
+    val esQuery = ESQuery(docId, 0, 5)
+    if (tab == "Closed" && navItem == "BGBug Details") {
+      FutureBinding(Ajax.post(
+        "bugcracker/searchRelatedClosed",
+        esQuery.asJson.toString(), 0
+      )).bind match {
+        case None =>
+        case Some(Success(response)) =>
+          val r1 = decode[SearchResult](response.responseText)
+          relatedResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
+        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+      }
+    } else {
+      relatedResults.value = SearchResult(0, Seq.empty)
+    }
+    <div></div>
+  }
+
+  @dom def searchRelatedNFRU: Binding[Node] = {
+    val tab = selectedTab.bind
+    val navHash = NavBarComponent.route.state.bind.hash
+    val navItem = NavBarComponent.route.state.bind.navBarName
+    val docId = navHash.substring(navHash.indexOf("""?""") + 1)
+    val esQuery = ESQuery(docId, 0, 5)
+    if (tab == "NFR" && navItem == "BGBug Details") {
+      FutureBinding(Ajax.post(
+        "bugcracker/searchRelatedNFR",
+        esQuery.asJson.toString(), 0
+      )).bind match {
+        case None =>
+        case Some(Success(response)) =>
+          val r1 = decode[SearchResult](response.responseText)
+          relatedNfrResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
+        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+      }
+    } else {
+      relatedNfrResults.value = SearchResult(0, Seq.empty)
+    }
+    <div></div>
+  }
+
+  @dom def searchRelatedNFR: Binding[Node] = {
     val navItem = NavBarComponent.route.state.bind.navBarName
     val navHash = NavBarComponent.route.state.bind.hash
     val docId = navHash.substring(navHash.indexOf("""?""") + 1)
@@ -106,7 +176,7 @@ object BgDetails {
                 </p>
               </div>
               <div class="d-flex justify-content-center align-self-stretch flex-row flex-wrap align-content-stretch">
-                { leftPanel.bind }{ mainPanel.bind }{ rightPanel.bind }
+                { leftPanel.bind }{ mainPanel.bind }{ rightPanelWithTabs.bind }
               </div>
             </div>
           </div>
@@ -191,6 +261,7 @@ object BgDetails {
     <i class="fa   fa-share-alt mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ bucket }</i>
 
   @dom def rightPanel: Binding[Node] = {
+
     <div class="d-flex p-2  text-wrap w-25 flex-column yellow lighten-5 border-left border-light sticky">
       <h2>Related</h2>
       {
@@ -218,6 +289,89 @@ object BgDetails {
       }
     </div>
 
+  }
+  @dom def relatedPanel: Binding[Node] = {
+    <div class="p-2">
+      {
+        Constants(relatedResults.bind.bgBugs: _*).map { item =>
+          <p>
+            <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
+              window.scroll(0, 0)
+            }>{ item.`Defect ID`.toString } </a>
+            { item.`Summary` }
+            &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
+          </p>
+        }
+      }
+    </div>
+  }
+
+  @dom def relatedNFRPanel: Binding[Node] = {
+    <div class="p-2">
+      {
+        Constants(relatedNfrResults.bind.bgBugs: _*).map { item =>
+          <p>
+            <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
+              window.scroll(0, 0)
+            }>{ item.`Defect ID`.toString } </a>
+            { item.`Summary` }
+            &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
+          </p>
+        }
+      }
+    </div>
+  }
+
+  @dom def relatedClosedPanel: Binding[Node] = {
+    <div class="p-2">
+      {
+        Constants(relatedResults.bind.bgBugs: _*).map { item =>
+          <p>
+            <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
+              window.scroll(0, 0)
+            }>{ item.`Defect ID`.toString } </a>
+            { item.`Summary` }
+            &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
+          </p>
+        }
+      }
+    </div>
+  }
+
+  @dom def rightPanelWithTabs: Binding[Node] = {
+    <div class="d-flex p-2  text-wrap w-25 flex-column yellow lighten-5 border-left border-light sticky">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class={ if (selectedTab.bind == "Related") "nav-link text-default active" else "nav-link text-default " } href="#" onclick={ (e: Event) =>
+            selectedTab.value = "Related"
+          }>Related</a>
+        </li>
+        <li class="nav-item">
+          <a class={ if (selectedTab.bind == "NFR") "nav-link text-default active" else "nav-link text-default " } href="#" onclick={ (e: Event) =>
+            selectedTab.value = "NFR"
+          }>NFR</a>
+        </li>
+        <li class="nav-item">
+          <a class={ if (selectedTab.bind == "Closed") "nav-link text-default active" else "nav-link text-default" } href="#" onclick={ (e: Event) =>
+            selectedTab.value = "Closed"
+          }>Closed</a>
+        </li>
+      </ul>
+      { renderRightPanelTabs.bind }
+    </div>
+  }
+
+  @dom def renderRightPanelTabs: Binding[Node] = {
+    val tab = selectedTab.bind
+    tab match {
+      case "Related" =>
+        { relatedPanel.bind }
+      case "NFR" =>
+        { relatedNFRPanel.bind }
+      case "Closed" =>
+        { relatedClosedPanel.bind }
+      case _ => { relatedPanel.bind }
+    }
   }
 }
 

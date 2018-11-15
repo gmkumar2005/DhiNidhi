@@ -10,6 +10,8 @@ class NoteDoobieTests extends FlatSpec with Matchers {
 
   "Doobie queries for [Note]" should "typecheck" in {
     NoteDoobie.countFragment.query[Long].check.unsafeRunSync
+    val count = NoteDoobie.countFragment.query[Long].check.unsafeRunSync
+    println(" Count  " + count)
     NoteDoobie.selectFragment.query[Note].check.unsafeRunSync
     (NoteDoobie.selectFragment ++ whereAnd(NoteDoobie.searchFragment("..."))).query[Note].check.unsafeRunSync
   }

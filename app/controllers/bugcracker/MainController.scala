@@ -115,7 +115,8 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).slice(1, 5).sortBy(_.`Defect ID`).reverse
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).slice(1, 10)
+        /** .sortBy(_.`Defect ID`).reverse */
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
       }
     }
@@ -149,7 +150,42 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val relatedSearchResults = relatedEsResults.value.map {
       case Left(s) => Ok(s.asJson)
       case Right(i) => {
-        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(5).sortBy(_.`Defect ID`)
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10)
+        /** .sortBy(_.`Defect ID`) */
+        Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
+
+      }
+    }
+    // end of  chaining
+    relatedSearchResults
+  }
+  }
+
+  def searchRelatedClosed = withSession("admin.index", admin = true) { implicit request => implicit td => {
+    import BgbugReader.BgbugReader
+
+    // start of chaining
+    val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
+    val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 10))
+    //    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
+
+    val relatedEsResults = for {
+      r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
+      r2 <- {
+        val fullDoc = r1.result.to[Bgbug]
+        val relatedEsNFRQuery = search("defects") query removeStopWords(fullDoc.`Summary`) + """ AND Status: "Closed" """ limit { 10 }
+        //        println(client.show(relatedEsNFRQuery))
+        log.debug("relatedEsNFRQuery")
+        log.debug(client.show(relatedEsNFRQuery))
+        EitherT(client.execute(relatedEsNFRQuery))
+      }
+    } yield r2
+
+    val relatedSearchResults = relatedEsResults.value.map {
+      case Left(s) => Ok(s.asJson)
+      case Right(i) => {
+        val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10)
+        /** .sortBy(_.`Defect ID`)*/
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
 
       }

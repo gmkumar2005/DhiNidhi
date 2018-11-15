@@ -23,13 +23,16 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
   NavBarComponent.route.watch
   NavBarComponent.notification.watch
   BgDetails.getSingleDoc().watch
-  BgDetails.searchRelated().watch
-  BgDetails.searchRelatedNFR().watch
+  //  BgDetails.searchRelated().watch
+  //  BgDetails.searchRelatedNFR().watch
+  BgDetails.searchRelatedU.watch()
+  BgDetails.searchRelatedNFRU.watch()
+  BgDetails.searchRelatedClosedU.watch()
+
+  BgDetails.renderRightPanelTabs.watch
   @dom def renderContent: Binding[Node] = NavBarComponent.route.state.bind.navBarName match {
     case "Home" => renderMainContent.bind
-    case "BGBug Details" => {
-      BgDetails.bgContent.bind
-    }
+    case "BGBug Details" => BgDetails.bgContent.bind
     case _ => renderMainContent.bind
   }
 

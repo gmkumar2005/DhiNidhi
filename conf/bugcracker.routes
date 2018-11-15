@@ -4,5 +4,6 @@ GET         /searchES                   controllers.bugcracker.MainController.se
 POST         /searchBG                   controllers.bugcracker.MainController.searchBG
 POST         /searchRelated                   controllers.bugcracker.MainController.searchRelated
 POST         /searchRelatedNFR                   controllers.bugcracker.MainController.searchRelatedNFR
+POST         /searchRelatedClosed                   controllers.bugcracker.MainController.searchRelatedClosed
 GET         /bg/:id                          controllers.bugcracker.MainController.getbyid(id: String)
 GET         /serverStatus               controllers.bugcracker.MainController.serverStatus

@@ -174,6 +174,7 @@ object BgDetails {
                   &nbsp;
                   { statusIcon(bgDoc.bind.`Status`).bind }
                   { renderMissingStepsIcon.bind }
+                  <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "Missing Attachments" }</i>
                 </p>
               </div>
               <div class="d-flex justify-content-center align-self-stretch flex-row flex-wrap align-content-stretch">
@@ -195,8 +196,34 @@ object BgDetails {
           <img class="img-fluid" src="assets/images/comingsoon.png" alt="Comming Soon" width={ 150 } height={ 100 }/>
         </div>
       </p>
+      <ul class="nav nav-tabs" id="myTab" data:role="tablist">
+        <li class="nav-item">
+          <h5>Trace File Smasher</h5>
+        </li>
+      </ul>
+      <div class="tab-content grey lighten-2" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" data:role="tabpanel" data:aria-labelledby="home-tab">
+          <button class="text-left btn btn-primary btn-sm ">
+            Upload Traces
+          </button>
+          <div class="container">
+            <p class="border-top border-light view overlay rounded">
+              <strong>Errors found in trace</strong>
+            </p>
+          </div>
+          <div class="row align-items-start border-bottom border-light">
+            <div class="col-sm">
+              <a class="text-left" href={ "#/details?1" }>11234</a>
+            </div>
+          </div>
+          <div class="row align-items-start border-bottom border-light">
+            <div class="col-sm">
+              <a class="text-left" href={ "#/details?1" }>152939</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
   }
 
   @dom def mainPanel: Binding[Node] = {
@@ -273,7 +300,7 @@ object BgDetails {
     }
 
     if (!result)
-      <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "MissingStepsIcon" }</i>
+      <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "Missing Steps to Reproduce" }</i>
     else
       <div></div>
   }

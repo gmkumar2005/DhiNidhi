@@ -109,7 +109,7 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
         { bgBug.`Summary`.toString }
       </td>
       <td>
-        { bgBug.`Description`.toString }
+        { bgBug.`Description`.toString.substring(0, 1000) }
       </td>
       <td>
         { bgBug.`Actual Fix Time`.toString }

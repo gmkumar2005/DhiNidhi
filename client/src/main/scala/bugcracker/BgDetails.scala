@@ -173,6 +173,7 @@ object BgDetails {
                   </strong>{ bgDoc.bind.`Summary` }
                   &nbsp;
                   { statusIcon(bgDoc.bind.`Status`).bind }
+                  { renderMissingStepsIcon.bind }
                 </p>
               </div>
               <div class="d-flex justify-content-center align-self-stretch flex-row flex-wrap align-content-stretch">
@@ -254,6 +255,25 @@ object BgDetails {
       case _ => <i class="fa fa-opera  mr-1 font-italic text-muted small" data:aria-hidden="true">{ status }</i>
     }
   }
+
+  @dom def renderMissingStepsIcon(): Binding[Node] = {
+
+    val pattern = "steps\\s+to\\s+reproduce".r
+
+    val str = bgDoc.bind.`Summary` + bgDoc.bind.`Description` + bgDoc.bind.`Comments`
+    val foundPattern = pattern findFirstIn str.toLowerCase
+
+    val result = foundPattern match {
+      case Some(i) => true
+      case None => false
+    }
+
+    if (!result)
+      <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "MissingStepsIcon" }</i>
+    else
+      <div></div>
+  }
+
   @dom def renderCustomerIcon(customer: String): Binding[Node] =
     <i class="fa fa-university   mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ customer } </i>
 

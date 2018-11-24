@@ -206,6 +206,10 @@ object BgDetails {
       <p class="border-bottom border-light">
         { bgDoc.bind.`Description` }
       </p>
+      <strong>Solution :</strong>
+      <p class="border-bottom border-light grey lighten-2">
+        Coming Soon
+      </p>
       <strong>Comments :</strong>
       <p class="border-bottom border-light">
         { bgDoc.bind.`Comments` }

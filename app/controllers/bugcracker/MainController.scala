@@ -51,7 +51,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     }
 
     val resp = client.execute(query).map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug]).asJson)
       }
@@ -68,7 +68,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val resp = client.execute {
       get(id) from "defects"
     }.map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         Ok(i.result.to[Bgbug].asJson)
       }
@@ -86,7 +86,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start }
 
     val resp = client.execute(query).map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10).sortBy(_.`Defect ID`).reverse
         Ok(SearchResult(i.result.totalHits, distinctItems).asJson)
@@ -113,7 +113,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     } yield r2
 
     val relatedSearchResults = relatedEsResults.value.map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).slice(1, 10)
         /** .sortBy(_.`Defect ID`).reverse */
@@ -148,7 +148,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     } yield r2
 
     val relatedSearchResults = relatedEsResults.value.map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10)
         /** .sortBy(_.`Defect ID`) */
@@ -182,7 +182,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     } yield r2
 
     val relatedSearchResults = relatedEsResults.value.map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10)
         /** .sortBy(_.`Defect ID`)*/
@@ -226,7 +226,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       limit
     }
     val resp = client.execute(query).map {
-      case Left(s) => Ok(s.asJson)
+      case Left(s) => NotFound
       case Right(i) => {
         Ok(SearchResult(i.result.totalHits, i.result.to[Bgbug]).asJson)
       }

@@ -1,7 +1,7 @@
 {
-  "key" : "boilerplay",
-  "projectId" : "boilerplay",
-  "projectTitle" : "Boilerplay",
+  "key" : "dhiNidhi",
+  "projectId" : "dhiNidhi",
+  "projectTitle" : "DhiNidhi",
   "flags" : [
     "doobie",
     "graphql",
@@ -1775,8 +1775,8 @@
   ],
   "views" : [
   ],
-  "source" : "boilerplay",
-  "projectLocation" : "/Users/kyle/Projects/Personal/boilerplay",
+  "source" : "dhiNidhi",
+  "projectLocation" : "/Users/gmkumar2005/Projects/Personal/dhiNidhi",
   "providedPackage" : null,
   "corePackage" : null,
   "coreLocation" : null,

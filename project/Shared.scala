@@ -8,8 +8,8 @@ import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import webscalajs.ScalaJSWeb
 
 object Shared {
-  val projectId = "boilerplay"
-  val projectName = "Boilerplay"
+  val projectId = "dhiNidhi"
+  val projectName = "DhiNidhi"
   val projectPort = 9000
 
   object Versions {

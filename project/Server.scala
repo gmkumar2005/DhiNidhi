@@ -42,7 +42,7 @@ object Server {
 
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectId,
-    maintainer := "Boilerplay User <admin@boilerplay.com>",
+    maintainer := "DhiNidhi User <admin@dhiNidhi.com>",
     description := Shared.projectName,
 
     resolvers += Resolver.jcenterRepo,
@@ -71,7 +71,7 @@ object Server {
     LessKeys.compress in Assets := true,
 
     // Source Control
-    scmInfo := Some(ScmInfo(url("https://github.com/KyleU/boilerplay"), "git@github.com:KyleU/boilerplay.git")),
+    scmInfo := Some(ScmInfo(url("https://github.com/gmkumar2005/DhiNidhi"), "git@github.com:gmkumar2005/DhiNidhi.git")),
     git.remoteRepo := scmInfo.value.get.connection,
 
     // Fat-Jar Assembly

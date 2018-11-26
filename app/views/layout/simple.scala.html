@@ -1,7 +1,7 @@
 @(user: Option[models.user.SystemUser], title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData
 )@layout.materialize(user, title, scripts = scripts,
-stylesheets = controllers.routes.Assets.versioned("stylesheets/boilerplay.min.css1").url +: stylesheets) {
+stylesheets = controllers.routes.Assets.versioned("stylesheets/dhiNidhi.min.css1").url +: stylesheets) {
   <header>
     @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
 

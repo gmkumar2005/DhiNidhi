@@ -1,6 +1,6 @@
 package bugcracker
 
-import bugcracker.BgDetails.{searchRelated, searchRelatedNFR, selectedTab}
+import bugcracker.BgDetails.{isLoadingDone, searchRelated, searchRelatedNFR, selectedTab}
 import bugcracker.NavBarComponent.{NavbarMenuItem, route}
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var}
 import com.thoughtworks.binding.{Binding, FutureBinding, dom}
@@ -28,6 +28,7 @@ object BgDetails {
   val relatedResults = Var(SearchResult(0, Seq.empty))
   val relatedNfrResults = Var(SearchResult(0, Seq.empty))
   val selectedTab = Var("Related")
+  val isLoadingDone = Var(true)
   @dom def getSingleDoc(): Binding[Node] = {
     val navItem = NavBarComponent.route.state.bind.navBarName
     val navHash = NavBarComponent.route.state.bind.hash
@@ -74,15 +75,19 @@ object BgDetails {
     val docId = navHash.substring(navHash.indexOf("""?""") + 1)
     val esQuery = ESQuery(docId, 0, 5)
     if (tab == "Related" && navItem == "BGBug Details") {
+      isLoadingDone.value = false
       FutureBinding(Ajax.post(
         "bugcracker/searchRelated",
         esQuery.asJson.toString(), 0
       )).bind match {
-        case None =>
+        case None => isLoadingDone.value = true
         case Some(Success(response)) =>
           val r1 = decode[SearchResult](response.responseText)
           relatedResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
-        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
+        case Some(Failure(exception)) =>
+          Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
       }
     } else {
       relatedResults.value = SearchResult(0, Seq.empty)
@@ -96,16 +101,21 @@ object BgDetails {
     val navHash = NavBarComponent.route.state.bind.hash
     val docId = navHash.substring(navHash.indexOf("""?""") + 1)
     val esQuery = ESQuery(docId, 0, 5)
+
     if (tab == "Closed" && navItem == "BGBug Details") {
+      isLoadingDone.value = false
       FutureBinding(Ajax.post(
         "bugcracker/searchRelatedClosed",
         esQuery.asJson.toString(), 0
       )).bind match {
-        case None =>
+        case None => isLoadingDone.value = true
         case Some(Success(response)) =>
           val r1 = decode[SearchResult](response.responseText)
           relatedResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
-        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
+        case Some(Failure(exception)) =>
+          Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
       }
     } else {
       relatedResults.value = SearchResult(0, Seq.empty)
@@ -119,16 +129,21 @@ object BgDetails {
     val navItem = NavBarComponent.route.state.bind.navBarName
     val docId = navHash.substring(navHash.indexOf("""?""") + 1)
     val esQuery = ESQuery(docId, 0, 5)
+
     if (tab == "NFR" && navItem == "BGBug Details") {
+      isLoadingDone.value = false
       FutureBinding(Ajax.post(
         "bugcracker/searchRelatedNFR",
         esQuery.asJson.toString(), 0
       )).bind match {
-        case None =>
+        case None => isLoadingDone.value = true
         case Some(Success(response)) =>
           val r1 = decode[SearchResult](response.responseText)
           relatedNfrResults.value = r1.getOrElse(SearchResult(0, Seq.empty))
-        case Some(Failure(exception)) => Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
+        case Some(Failure(exception)) =>
+          Logging.error("BgDetails.scala searchRelated : " + exception.getMessage)
+          isLoadingDone.value = true
       }
     } else {
       relatedNfrResults.value = SearchResult(0, Seq.empty)
@@ -283,7 +298,7 @@ object BgDetails {
       case "New" => <i class="fa fa-file-o  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
       case "Suspected NFR" => <i class="fa fa-minus-circle mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
       case "Rejected" => <i class="fa fa-window-close-o  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp;{ status }</i>
-      case _ => <i class="fa fa-opera  mr-1 font-italic text-muted small" data:aria-hidden="true">{ status }</i>
+      case _ => <i class="fa fa-opera  mr-1 font-italic text-muted small" data:aria-hidden="true">&nbsp; { status }</i>
     }
   }
 
@@ -344,6 +359,15 @@ object BgDetails {
   @dom def relatedPanel: Binding[Node] = {
     <div class="p-2">
       {
+        if (relatedResults.bind.totalHits == 0 && isLoadingDone.bind) {
+          <p>None</p>
+        } else if (!isLoadingDone.bind) {
+          <p>Loading ...</p>
+        } else {
+          <!-- empty content -->
+        }
+      }
+      {
         Constants(relatedResults.bind.bgBugs: _*).map { item =>
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
@@ -360,6 +384,15 @@ object BgDetails {
   @dom def relatedNFRPanel: Binding[Node] = {
     <div class="p-2">
       {
+        if (relatedNfrResults.bind.totalHits == 0 && isLoadingDone.bind) {
+          <p>None</p>
+        } else if (!isLoadingDone.bind) {
+          <p>Loading ...</p>
+        } else {
+          <!-- empty content -->
+        }
+      }
+      {
         Constants(relatedNfrResults.bind.bgBugs: _*).map { item =>
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
@@ -375,6 +408,15 @@ object BgDetails {
 
   @dom def relatedClosedPanel: Binding[Node] = {
     <div class="p-2">
+      {
+        if (relatedResults.bind.totalHits == 0 && isLoadingDone.bind) {
+          <p>None</p>
+        } else if (!isLoadingDone.bind) {
+          <p>Loading ...</p>
+        } else {
+          <!-- empty content -->
+        }
+      }
       {
         Constants(relatedResults.bind.bgBugs: _*).map { item =>
           <p>

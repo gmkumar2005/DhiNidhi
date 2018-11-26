@@ -83,7 +83,8 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
     val esQuery = decode[ESQuery](request.body.asText.getOrElse("{}"))
     val recievedEsQuery = esQuery.getOrElse(ESQuery("", 0, 15))
     val client = HttpClient(ElasticsearchClientUri("10.91.10.13", 9200))
-    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start { recievedEsQuery.start }
+    val query = search("defects") query { recievedEsQuery.query } limit { recievedEsQuery.limit } start
+      { recievedEsQuery.start } sortByFieldDesc ("Defect ID")
 
     val resp = client.execute(query).map {
       case Left(s) => NotFound
@@ -173,7 +174,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
       r1 <- EitherT(client.execute(get(recievedEsQuery.query) from "defects"))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val relatedEsNFRQuery = search("defects") query removeStopWords(fullDoc.`Summary`) + """ AND Status: "Closed" """ limit { 10 }
+        val relatedEsNFRQuery = search("defects") query removeStopWords(fullDoc.`Summary`) + """ AND Status.keyword: "Closed" """ limit { 10 }
         //        println(client.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
         log.debug(client.show(relatedEsNFRQuery))
@@ -196,7 +197,7 @@ class MainController @javax.inject.Inject() (override val app: Application) exte
   }
 
   def appendStatusQuery(queryWords: String): String = {
-    removeStopWords(queryWords) + """ AND Status: "Closed NFR" """
+    removeStopWords(queryWords) + """ AND Status.keyword: "Closed NFR" """
   }
   def removeStopWords(sentence: String): String = {
     val stopWords = Set("gpp", "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "youre", "youve", "youll",

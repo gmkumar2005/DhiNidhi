@@ -2,7 +2,7 @@ package bugcracker
 
 import bugcracker.BgDetails.{isLoadingDone, searchRelated, searchRelatedNFR, selectedTab}
 import bugcracker.NavBarComponent.{NavbarMenuItem, route}
-import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var}
+import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var, Vars}
 import com.thoughtworks.binding.{Binding, FutureBinding, dom}
 import io.circe.parser.decode
 import models.{Bgbug, ESQuery, SearchResult}
@@ -192,6 +192,7 @@ object BgDetails {
                   <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "Missing Attachments" }</i>
                 </p>
               </div>
+              { renderPeople.bind }
               <div class="d-flex justify-content-center align-self-stretch flex-row flex-wrap align-content-stretch">
                 { leftPanel.bind }{ mainPanel.bind }{ rightPanelWithTabs.bind }
               </div>
@@ -201,6 +202,29 @@ object BgDetails {
       </div>
     </main>
 
+  @dom def renderPeople: Binding[Node] = {
+
+    val usereList = Vars.empty[String]
+    usereList.value += bgDoc.bind.`Assigned To`.replaceAll("\\s", "+")
+    usereList.value += bgDoc.bind.`Detected By`.replaceAll("\\s", "+")
+    usereList.value += bgDoc.bind.`Detected By`.replaceAll("\\s", "+")
+    println(" User List" + usereList)
+    val cssclass = s"rounded-circle z-depth-1-half"
+    //    val userListCleaned = usereList.value.filter(_.nonEmpty)
+    val imageSource1 = s"https://ui-avatars.com/api/?name=" +
+      bgDoc.bind.`Assigned To`.replaceAll("\\s", "+") +
+      s"&background=0D8ABC&color=fff&size=32"
+    val imageSource2 = s"https://ui-avatars.com/api/?name=" +
+      bgDoc.bind.`Detected By`.replaceAll("\\s", "+") +
+      s"&background=0D8ABC&color=fff&size=32"
+    <div class="d-flex flex-row p-0 border-bottom border-light">
+      {
+        <h6 class="mt-2">People : &nbsp; &nbsp; </h6>
+        <img src={ imageSource1 } class={ cssclass } data:data-toggle="tooltip" title={ bgDoc.bind.`Assigned To` }/><p></p>
+        <img src={ imageSource2 } class={ cssclass } data:data-toggle="tooltip" title={ bgDoc.bind.`Detected By` }/>
+      }
+    </div>
+  }
   @dom def leftPanel: Binding[Node] = {
     <div class="d-flex p-2  text-wrap w-25 flex-column">
       <strong>Commits</strong>

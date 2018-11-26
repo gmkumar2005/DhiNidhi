@@ -328,7 +328,7 @@ object BgDetails {
 
   @dom def renderMissingStepsIcon(): Binding[Node] = {
 
-    val pattern = "steps\\s+to\\s+reproduce".r
+    val pattern = "steps\\s+to\\s+(reproduce|create|recreate)".r
 
     val str = bgDoc.bind.`Summary` + bgDoc.bind.`Description` + bgDoc.bind.`Comments`
     val foundPattern = pattern findFirstIn str.toLowerCase

@@ -1,6 +1,6 @@
 package bugcracker
 
-import org.scalajs.dom.{Event, Node, window}
+import org.scalajs.dom.{Event, KeyboardEvent, Node, window}
 import org.scalajs.dom.raw.HTMLInputElement
 import util.Logging
 import com.thoughtworks.binding.Binding.{Var, Vars}
@@ -8,7 +8,7 @@ import com.thoughtworks.binding.{Binding, FutureBinding, Route, dom}
 import io.circe.parser._
 import io.circe.syntax._
 import models.{Bgbug, ESQuery, SearchResult}
-import org.scalajs.dom.ext.Ajax
+import org.scalajs.dom.ext.{Ajax, KeyCode}
 import util.Toastr
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -65,7 +65,7 @@ object NavBarComponent {
                </li>
         </ul>
         <div class="md-form mt-0 col-md-10 mb-0 p-0">
-          <input type="text" value={ searchWord.bind } placeholder="Search... (e.g. Status:open AND Comments:msg)" id="searchInput2" class="form-control form-control-sm text-warning mb-0" onchange={ handleWord(searchInput2)(_) }/>
+          <input type="text" value={ searchWord.bind } placeholder="Search... (e.g. Status:open AND Comments:msg)" id="searchInput2" class="form-control form-control-sm text-warning mb-0" onchange={ handleWord(searchInput2)(_) } onkeypress={ handleEnter(searchInput2)(_) }/>
         </div>
         <a class="navbar-brand" href="#" onclick={ handleSearchLink()(_) }>
           <strong>
@@ -74,6 +74,15 @@ object NavBarComponent {
         </a>
       </div>
     </nav>
+
+  def handleEnter(input: HTMLInputElement)(e: KeyboardEvent) = {
+    e.keyCode match {
+      case KeyCode.Enter =>
+        route.state.value = NavbarMenuItem("Home", "#/home", "explore")
+        searchWord.value = input.value.trim
+      case _ => None
+    }
+  }
 
   def handleWord(input: HTMLInputElement)(e: Event) = {
     Logging.info(s"SearchBar.scala Input Changed")

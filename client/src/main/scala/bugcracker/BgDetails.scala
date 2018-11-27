@@ -224,6 +224,61 @@ object BgDetails {
       }
     </div>
   }
+
+  @dom def renderTraceFileSmasher: Binding[Node] = {
+    <div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th data:scope="col"><strong>Trace File Smasher</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <button class="text-left btn btn-primary btn-sm ">
+                Upload Trace File
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th data:scope="col"><strong>Errors found in trace</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <a class="text-left" href={ "#/details?1" }>No Valid Mop Found</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="text-left" href={ "#/details?1" }>Membership validation failed</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="text-left" href={ "#/details?1" }>Failed to derive credit account number</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @dom def renderPotentialNFR: Binding[Node] = {
+    <div class="col-md-12">
+      <button type="button" class="btn btn-outline-danger btn-rounded waves-effect" title="Potential NFR">
+        <i class="fa fa-train pr-2" data:aria-hidden="true"></i>
+        Potential NFR
+      </button>
+    </div>
+  }
+
   @dom def leftPanel: Binding[Node] = {
 
     <div class="d-flex p-2  text-wrap w-25 flex-column">
@@ -236,33 +291,8 @@ object BgDetails {
           <img class="img-fluid" src="assets/images/comingsoon.png" alt="Comming Soon" width={ 150 } height={ 100 }/>
         </div>
       </p>
-      <ul class="nav nav-tabs" id="myTab" data:role="tablist">
-        <li class="nav-item">
-          <h5>Trace File Smasher</h5>
-        </li>
-      </ul>
-      <div class="tab-content grey lighten-2" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" data:role="tabpanel" data:aria-labelledby="home-tab">
-          <button class="text-left btn btn-primary btn-sm ">
-            Upload Traces
-          </button>
-          <div class="container">
-            <p class="border-top border-light view overlay rounded">
-              <strong>Errors found in trace</strong>
-            </p>
-          </div>
-          <div class="row align-items-start border-bottom border-light">
-            <div class="col-sm">
-              <a class="text-left" href={ "#/details?1" }>11234</a>
-            </div>
-          </div>
-          <div class="row align-items-start border-bottom border-light">
-            <div class="col-sm">
-              <a class="text-left" href={ "#/details?1" }>152939</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      { renderTraceFileSmasher.bind }
+      { renderPotentialNFR.bind }
     </div>
   }
 
@@ -275,7 +305,7 @@ object BgDetails {
       </p>
       <strong>Solution :</strong>
       <p class="border-bottom border-light grey lighten-2">
-        Coming Soon
+        Data Not Available
       </p>
       <strong>Comments :</strong>
       <p class="border-bottom border-light">

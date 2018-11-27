@@ -246,23 +246,35 @@ object BgDetails {
       <table class="table table-hover">
         <thead>
           <tr>
-            <th data:scope="col"><strong>Errors found in trace</strong></th>
+            <th data:scope="col"><i class="fa fa-quote-left pr-2"></i><strong>Errors found in trace</strong></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <a class="text-left" href={ "#/details?1" }>No Valid Mop Found</a>
+              <a class="text-left" onclick={ (e: Event) =>
+                NavBarComponent.searchWord.value += " AND " + "No Valid Mop Found"
+                route.state.value = NavbarMenuItem("Home", "#/home", "explore")
+                window.scroll(0, 0)
+              }>No Valid Mop Found</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="text-left" href={ "#/details?1" }>Membership validation failed</a>
+              <a class="text-left" onclick={ (e: Event) =>
+                NavBarComponent.searchWord.value += " AND " + "Membership validation failed"
+                route.state.value = NavbarMenuItem("Home", "#/home", "explore")
+                window.scroll(0, 0)
+              }>Membership validation failed</a>
             </td>
           </tr>
           <tr>
             <td>
-              <a class="text-left" href={ "#/details?1" }>Failed to derive credit account number</a>
+              <a class="text-left" onclick={ (e: Event) =>
+                NavBarComponent.searchWord.value += " AND " + "Failed to derive credit account number"
+                route.state.value = NavbarMenuItem("Home", "#/home", "explore")
+                window.scroll(0, 0)
+              }>Failed to derive credit account number</a>
             </td>
           </tr>
         </tbody>
@@ -271,28 +283,27 @@ object BgDetails {
   }
 
   @dom def renderPotentialNFR: Binding[Node] = {
-    <div class="col-md-12">
-      <button type="button" class="btn btn-outline-danger btn-rounded waves-effect" title="Potential NFR">
-        <i class="fa fa-train pr-2" data:aria-hidden="true"></i>
-        Potential NFR
-      </button>
+    <div class="d-flex flex-column p-2 ">
+      <strong>Suggested Resolution : &nbsp; </strong><strong class="font-weight-bold mb-3"><i class="fa fa-diamond pr-2"></i>NFR</strong>
+      <strong>Suggested Component : &nbsp; </strong><strong class="font-weight-bold mb-3"><i class="fa fa-database pr-2"></i>DB</strong>
     </div>
   }
 
   @dom def leftPanel: Binding[Node] = {
 
-    <div class="d-flex p-2  text-wrap w-25 flex-column">
+    <div class="d-flex p-2  text-wrap w-25 flex-column border-right border-light ">
       { renderPeople.bind }
       <strong>Commits</strong>
       <p>
-        <a class="text-left" href={ "#/details?1" }>152939</a>
-        Comming Soon
-        <div class="view overlay rounded">
-          <img class="img-fluid" src="assets/images/comingsoon.png" alt="Comming Soon" width={ 150 } height={ 100 }/>
-        </div>
+        <a class="text-left" href={ "http://isr-swarm.fundtech.isr/changes/92903" }>92903</a>
+        NPP|SIT|DUPL flag is missing in CN-Pacs002 message of the duplicate rejected payment for incoming transaction
       </p>
-      { renderTraceFileSmasher.bind }
+      <p>
+        <a class="text-left" href={ "http://isr-swarm.fundtech.isr/changes/96675" }>96675</a>
+        automation added ID to html elements and align tests
+      </p>
       { renderPotentialNFR.bind }
+      { renderTraceFileSmasher.bind }
     </div>
   }
 

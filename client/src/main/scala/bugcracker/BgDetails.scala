@@ -192,7 +192,6 @@ object BgDetails {
                   <i class="fa fa-bullseye mr-1 font-italic text-muted small text-danger" data:aria-hidden="true">&nbsp;{ "Missing Attachments" }</i>
                 </p>
               </div>
-              { renderPeople.bind }
               <div class="d-flex justify-content-center align-self-stretch flex-row flex-wrap align-content-stretch">
                 { leftPanel.bind }{ mainPanel.bind }{ rightPanelWithTabs.bind }
               </div>
@@ -226,7 +225,9 @@ object BgDetails {
     </div>
   }
   @dom def leftPanel: Binding[Node] = {
+
     <div class="d-flex p-2  text-wrap w-25 flex-column">
+      { renderPeople.bind }
       <strong>Commits</strong>
       <p>
         <a class="text-left" href={ "#/details?1" }>152939</a>

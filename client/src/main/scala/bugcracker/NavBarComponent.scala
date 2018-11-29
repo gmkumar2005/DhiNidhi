@@ -54,15 +54,16 @@ object NavBarComponent {
         <ul class="navbar-nav mr-auto">
           <li class={ if ("#/home" == route.state.bind.hash) "nav-item active" else "nav-item" }>
             <a class="nav-link" href="#/home">
-              Home
+              DhiNidhi
               <span class="sr-only">(current)</span>
             </a>
-          </li><li class={ if ("#/details" == route.state.bind.hash) "nav-item active" else "nav-item" }>
+          </li>
+          <!--  <li class={ if ("#/details" == route.state.bind.hash) "nav-item active" else "nav-item" }>
                  <a class="nav-link" href="#/details?83">
                    Details
                    <span class="sr-only">(current)</span>
                  </a>
-               </li>
+               </li> -->
         </ul>
         <div class="md-form mt-0 col-md-10 mb-0 p-0">
           <input type="text" value={ searchWord.bind } placeholder="Search... (e.g. Status:open AND Comments:msg)" id="searchInput2" class="form-control form-control-sm text-warning mb-0" onchange={ handleWord(searchInput2)(_) } onkeypress={ handleEnter(searchInput2)(_) }/>

@@ -295,16 +295,18 @@ object BgDetails {
   }
 
   @dom def renderPotentialComponent: Binding[Node] = {
-    {
-      bgDoc.bind.Suggested_Resolution match {
-        case "NFR" => <div class="d-flex flex-row p-0 ">
-                        <strong>Suggested Component : &nbsp; </strong>
-          <strong class="font-weight-bold mb-3"><i class="fa fa-database pr-2"></i>DB</strong>
-                      </div>
-        case _ => <div> <!-- empty content --> </div>
-      }
-    }
+    <div class="d-flex flex-row p-0 ">
+      <strong>
+        Suggested Component :
+        &nbsp;
+      </strong>
+      <strong class="font-weight-bold mb-3">
+        <i class="fa fa-database pr-2"></i>
+        DB
+      </strong>
+    </div>
   }
+
   @dom def leftPanel: Binding[Node] = {
 
     <div class="d-flex p-2  text-wrap w-25 flex-column border-right border-light ">

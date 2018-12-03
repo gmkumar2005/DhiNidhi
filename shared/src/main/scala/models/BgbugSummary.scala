@@ -66,7 +66,8 @@ case class Bgbug(
     `Modified`: String,
     `Status`: String,
     `Type`: String,
-    `Raised By`: String
+    `Raised By`: String,
+    Suggested_Resolution: String
 )
 
 object SearchResult {

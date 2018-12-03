@@ -24,7 +24,7 @@ object jquery extends JQueryStatic
 
 object BgDetails {
   val bgDoc = Var(Bgbug("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
+    "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
   val relatedResults = Var(SearchResult(0, Seq.empty))
   val relatedNfrResults = Var(SearchResult(0, Seq.empty))
   val selectedTab = Var("Related")
@@ -41,7 +41,7 @@ object BgDetails {
         case Some(Success(response)) =>
           val r1 = decode[Bgbug](response.responseText)
           bgDoc.value = r1.getOrElse(Bgbug("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
+            "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
         case Some(Failure(exception)) => val e1 = "error"
       }
     }
@@ -283,12 +283,28 @@ object BgDetails {
   }
 
   @dom def renderPotentialNFR: Binding[Node] = {
-    <div class="d-flex flex-column p-2 ">
-      <strong>Suggested Resolution : &nbsp; </strong><strong class="font-weight-bold mb-3"><i class="fa fa-diamond pr-2"></i>NFR</strong>
-      <strong>Suggested Component : &nbsp; </strong><strong class="font-weight-bold mb-3"><i class="fa fa-database pr-2"></i>DB</strong>
-    </div>
+    {
+      bgDoc.bind.Suggested_Resolution match {
+        case "NFR" => <div class="d-flex flex-row p-0 ">
+                        <strong>Suggested Resolution : &nbsp; </strong>
+                        <strong class="font-weight-bold mb-3"><i class="fa fa-diamond pr-2"></i>NFR</strong>
+                      </div>
+        case _ => <div> <!-- empty content --> </div>
+      }
+    }
   }
 
+  @dom def renderPotentialComponent: Binding[Node] = {
+    {
+      bgDoc.bind.Suggested_Resolution match {
+        case "NFR" => <div class="d-flex flex-row p-0 ">
+                        <strong>Suggested Component : &nbsp; </strong>
+          <strong class="font-weight-bold mb-3"><i class="fa fa-database pr-2"></i>DB</strong>
+                      </div>
+        case _ => <div> <!-- empty content --> </div>
+      }
+    }
+  }
   @dom def leftPanel: Binding[Node] = {
 
     <div class="d-flex p-2  text-wrap w-25 flex-column border-right border-light ">
@@ -303,6 +319,7 @@ object BgDetails {
         automation added ID to html elements and align tests
       </p>
       { renderPotentialNFR.bind }
+      { renderPotentialComponent.bind }
       { renderTraceFileSmasher.bind }
     </div>
   }

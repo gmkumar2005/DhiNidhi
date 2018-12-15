@@ -37,12 +37,17 @@ import scala.reflect.internal.util.Collections._
 class MainController @javax.inject.Inject() (override val app: Application, config: Configuration, appLifecycle: ApplicationLifecycle) extends BaseController("main") {
 
   import app.contexts.webContext
-  val client = HttpClient(ElasticsearchClientUri(
-    config.get[String]("dhiNidhi.elasticServer"),
-    config.get[Int]("dhiNidhi.elasticServerPort")))
-  val esIndex = config.get[String]("dhiNidhi.index")
   val elasticServer = config.get[String]("dhiNidhi.elasticServer")
   val elasticServerPort = config.get[Int]("dhiNidhi.elasticServerPort")
+
+  val client = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+  val detailsclient = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+  val searchbgclient = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+  val nfrclient = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+  val relatedclient = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+  val closedclient = HttpClient(ElasticsearchClientUri(elasticServer, elasticServerPort))
+
+  val esIndex = config.get[String]("dhiNidhi.index")
 
   appLifecycle.addStopHook { () =>
     Future.successful(client.close())
@@ -75,7 +80,7 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
   def getbyid(id: String) = withSession("admin.index", admin = true) { implicit request => implicit td => {
     import BgbugReader.BgbugReader
 
-    val resp = client.execute {
+    val resp = detailsclient.execute {
       get(id) from esIndex
     }.map {
       case Left(s) => NotFound
@@ -96,7 +101,7 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
     val query = search(esIndex) query { recievedEsQuery.query } limit { recievedEsQuery.limit } start
       { recievedEsQuery.start } sortByFieldDesc ("Defect ID")
 
-    val resp = client.execute(query).map {
+    val resp = searchbgclient.execute(query).map {
       case Left(s) => NotFound
       case Right(i) => {
         val distinctItems = distinctBy(i.result.to[Bgbug].toList)((x) => x.`Defect ID`).take(10).sortBy(_.`Defect ID`).reverse
@@ -116,11 +121,11 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
     // dont remove    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
 
     val relatedEsResults = for {
-      r1 <- EitherT(client.execute(get(recievedEsQuery.query) from esIndex))
+      r1 <- EitherT(relatedclient.execute(get(recievedEsQuery.query) from esIndex))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val releatedEsQuery = search(esIndex) query removeStopWords(fullDoc.`Description` + fullDoc.`Summary`) limit { 15 }
-        EitherT(client.execute(releatedEsQuery))
+        val releatedEsQuery = search(esIndex) query removeStopWords(fullDoc.`Description` + " " + fullDoc.`Summary`) limit { 15 }
+        EitherT(relatedclient.execute(releatedEsQuery))
       }
     } yield r2
 
@@ -148,14 +153,14 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
     //    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
 
     val relatedEsResults = for {
-      r1 <- EitherT(client.execute(get(recievedEsQuery.query) from esIndex))
+      r1 <- EitherT(nfrclient.execute(get(recievedEsQuery.query) from esIndex))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val relatedEsNFRQuery = search(esIndex) query appendStatusQuery(fullDoc.`Summary`) limit { 10 }
-        //        println(client.show(relatedEsNFRQuery))
+        val relatedEsNFRQuery = search(esIndex) query """ Status.keyword:"Closed NFR" AND """ + removeStopWords(fullDoc.`Summary` + " " + fullDoc.`Description`) limit { 10 }
+        println(nfrclient.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
-        log.debug(client.show(relatedEsNFRQuery))
-        EitherT(client.execute(relatedEsNFRQuery))
+        log.debug(nfrclient.show(relatedEsNFRQuery))
+        EitherT(nfrclient.execute(relatedEsNFRQuery))
       }
     } yield r2
 
@@ -182,14 +187,14 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
     //    val queryFuture: Future[Either[RequestFailure, RequestSuccess[SearchResponse]]] = client.execute(query)
 
     val relatedEsResults = for {
-      r1 <- EitherT(client.execute(get(recievedEsQuery.query) from esIndex))
+      r1 <- EitherT(closedclient.execute(get(recievedEsQuery.query) from esIndex))
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
-        val relatedEsNFRQuery = search(esIndex) query removeStopWords(fullDoc.`Summary`) + """ AND Status.keyword: "Closed" """ limit { 10 }
-        //        println(client.show(relatedEsNFRQuery))
+        val relatedEsNFRQuery = search(esIndex) query """ Status.keyword:"Closed" AND """ + removeStopWords(fullDoc.`Summary` + " " + fullDoc.`Description`) limit { 10 }
+        println(closedclient.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
-        log.debug(client.show(relatedEsNFRQuery))
-        EitherT(client.execute(relatedEsNFRQuery))
+        log.debug(closedclient.show(relatedEsNFRQuery))
+        EitherT(closedclient.execute(relatedEsNFRQuery))
       }
     } yield r2
 
@@ -207,9 +212,6 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
   }
   }
 
-  def appendStatusQuery(queryWords: String): String = {
-    removeStopWords(queryWords) + """ AND Status.keyword: "Closed NFR" """
-  }
   def removeStopWords(sentence: String): String = {
     val stopWords = Set("gpp", "msg", "payment")
     val trimmedSentence = sentence.filter(_ >= ' ').trim.replaceAll(" +", " ").replaceAll("[^A-Za-z0-9\\s]", "").toLowerCase

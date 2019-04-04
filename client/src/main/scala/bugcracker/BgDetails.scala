@@ -24,7 +24,7 @@ object jquery extends JQueryStatic
 
 object BgDetails {
   val bgDoc = Var(Bgbug("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
+    "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", None))
   val relatedResults = Var(SearchResult(0, Seq.empty))
   val relatedNfrResults = Var(SearchResult(0, Seq.empty))
   val selectedTab = Var("Related")
@@ -41,7 +41,7 @@ object BgDetails {
         case Some(Success(response)) =>
           val r1 = decode[Bgbug](response.responseText)
           bgDoc.value = r1.getOrElse(Bgbug("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
+            "", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", None))
         case Some(Failure(exception)) => val e1 = "error"
       }
     }
@@ -182,7 +182,7 @@ object BgDetails {
                 <p>
                   <strong>
                     [
-                    { bgDoc.bind.`Defect ID`.toString }
+                    { bgDoc.bind.`JiraKey` match { case Some("None") => bgDoc.bind.`_id`.toString case Some(jirakey) => jirakey case None => bgDoc.bind.`_id`.toString } }
                     ]
                     &nbsp;
                   </strong>{ bgDoc.bind.`Summary` }
@@ -420,7 +420,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
               window.scroll(0, 0)
-            }>{ item.`Defect ID`.toString } </a>
+            }>{ item.`JiraKey` match { case Some("None") => item.`Defect ID`.toString case Some(jirakey) => jirakey case None => item.`Defect ID`.toString } } </a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
@@ -432,7 +432,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
               window.scroll(0, 0)
-            }>{ item.`Defect ID`.toString }</a>
+            }>{ item.`JiraKey` match { case Some("None") => item.`Defect ID`.toString case Some(jirakey) => jirakey case None => item.`Defect ID`.toString } }</a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
@@ -457,7 +457,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
               window.scroll(0, 0)
-            }>{ item.`Defect ID`.toString } </a>
+            }>{ item.`JiraKey` match { case Some("None") => item.`Defect ID`.toString case Some(jirakey) => jirakey case None => item.`Defect ID`.toString } } </a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
@@ -482,7 +482,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
               window.scroll(0, 0)
-            }>{ item.`Defect ID`.toString } </a>
+            }>{ item.`JiraKey` match { case Some("None") => item.`Defect ID`.toString case Some(jirakey) => jirakey case None => item.`Defect ID`.toString } } </a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>
@@ -507,7 +507,7 @@ object BgDetails {
           <p>
             <a class="text-left" href={ "#/details?" + item.`_id` } onclick={ (e: Event) =>
               window.scroll(0, 0)
-            }>{ item.`Defect ID`.toString } </a>
+            }>{ item.`JiraKey` match { case Some("None") => item.`Defect ID`.toString case Some(jirakey) => jirakey case None => item.`Defect ID`.toString } } </a>
             { item.`Summary` }
             &nbsp;{ statusIcon(item.`Status`).bind }{ renderCustomerIcon(item.`Customer`).bind }
           </p>

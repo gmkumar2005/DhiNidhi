@@ -157,7 +157,7 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
         val relatedEsNFRQuery = search(esIndex) query """ Status.keyword:"Closed NFR" AND """ + removeStopWords(fullDoc.`Summary` + " " + fullDoc.`Description`) limit { 10 }
-//        println(nfrclient.show(relatedEsNFRQuery))
+        //        println(nfrclient.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
         log.debug(nfrclient.show(relatedEsNFRQuery))
         EitherT(nfrclient.execute(relatedEsNFRQuery))
@@ -191,7 +191,7 @@ class MainController @javax.inject.Inject() (override val app: Application, conf
       r2 <- {
         val fullDoc = r1.result.to[Bgbug]
         val relatedEsNFRQuery = search(esIndex) query """ Status.keyword:"Closed" AND """ + removeStopWords(fullDoc.`Summary` + " " + fullDoc.`Description`) limit { 10 }
-//        println(closedclient.show(relatedEsNFRQuery))
+        //        println(closedclient.show(relatedEsNFRQuery))
         log.debug("relatedEsNFRQuery")
         log.debug(closedclient.show(relatedEsNFRQuery))
         EitherT(closedclient.execute(relatedEsNFRQuery))

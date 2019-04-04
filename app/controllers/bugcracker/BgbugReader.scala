@@ -61,7 +61,8 @@ object BgbugReader {
         hit.sourceAsMap.getOrElse("Status", "Empty").toString,
         hit.sourceAsMap.getOrElse("Type", "Empty").toString,
         hit.sourceAsMap.getOrElse("Raised By", "Empty").toString,
-        hit.sourceAsMap.getOrElse("Suggested_Resolution", "Empty").toString
+        hit.sourceAsMap.getOrElse("Suggested_Resolution", "Empty").toString,
+        Some(hit.sourceAsMap.getOrElse("JiraKey", None).toString)
       )
       )
     }

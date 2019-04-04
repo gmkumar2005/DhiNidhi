@@ -67,15 +67,11 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
                 <th>Assigned To</th>
                 <th>Summary</th>
                 <th>Description</th>
-                <th>Actual Fix Time</th>
                 <th>Status</th>
                 <th>Type</th>
                 <th>Product</th>
                 <th>Priority</th>
-                <th>Open Date</th>
                 <th>Raised By</th>
-                <th>Modified</th>
-                <th>Sub Status</th>
               </tr>
             </thead>
             <!--Table head-->
@@ -98,7 +94,7 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
           <a class="text-left text-primary" href={ "#/details?" + bgBug.`_id`.toString } onclick={ (e: Event) =>
             window.scroll(0, 0)
           }>
-            { bgBug.`Defect ID`.toString }
+            { bgBug.`JiraKey` match { case Some("None") => bgBug.`_id`.toString case Some(jirakey) => jirakey case None => bgBug.`_id`.toString } }
           </a>
         </p>
       </td>
@@ -109,10 +105,7 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
         { bgBug.`Summary`.toString }
       </td>
       <td>
-        { bgBug.`Description`.toString.substring(0, 1000) }
-      </td>
-      <td>
-        { bgBug.`Actual Fix Time`.toString }
+        { bgBug.`Description`.toString }
       </td>
       <td>
         { bgBug.`Status`.toString }
@@ -127,16 +120,7 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
         { bgBug.`Priority` }
       </td>
       <td>
-        { bgBug.`Open_date` }
-      </td>
-      <td>
         { bgBug.`Raised By` }
-      </td>
-      <td>
-        { bgBug.`Modified` }
-      </td>
-      <td>
-        { bgBug.`Sub Status` }
       </td>
     </tr>
 

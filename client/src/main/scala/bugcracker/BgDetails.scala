@@ -330,8 +330,7 @@ object BgDetails {
 
     <div class="d-flex p-2 w-50 text-wrap flex-column">
       <strong>Description</strong>
-      <p class="border-bottom border-light">
-        { bgDoc.bind.`Description` }
+      <p class="border-bottom border-light" innerHTML={ bgDoc.bind.`Description` }>
       </p>
       <strong>Solution :</strong>
       <p class="border-bottom border-light grey lighten-2">

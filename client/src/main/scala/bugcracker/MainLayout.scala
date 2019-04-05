@@ -105,7 +105,7 @@ class MainLayout extends Entrypoint("Bugcracker MainPage Layout") {
         { bgBug.`Summary`.toString }
       </td>
       <td>
-        { bgBug.`Description`.toString }
+        <p innerHTML={ bgBug.`Description`.toString.take(1000) }> </p>
       </td>
       <td>
         { bgBug.`Status`.toString }
